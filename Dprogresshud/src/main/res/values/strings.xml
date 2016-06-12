@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">progresshud</string>
+    
+    <color name="dyprogresshud_default_color">#d0222222</color>
+</resources>
