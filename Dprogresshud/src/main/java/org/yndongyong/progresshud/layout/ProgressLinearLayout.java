@@ -36,7 +36,13 @@ public class ProgressLinearLayout extends LinearLayout {
                 .dyprogresshud_default_radius);
     }
 
-    private void initLayoutbackground(int color,int radius) {
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    private void initLayoutbackground(int color, int radius) {
         GradientDrawable gradientDrawable = new GradientDrawable();
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
         gradientDrawable.setColor(color);
