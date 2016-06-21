@@ -2,16 +2,14 @@ package org.yndongyong.progresshud;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -28,7 +26,8 @@ public class DProgressHUD extends Dialog {
     }
 
     public enum Style {
-        SPIN_INDETERMINATE, PIE_DETERNIMATER
+        SPIN_INDETERMINATE, PIE_DETERNIMATER, ALERT_ACTION_DONE,
+        ALERT_ACTION_ERROR, ALERT_ACTION_INFO,ALERT_ACTION_WARN
     }
 
     private View rootView;
@@ -42,7 +41,7 @@ public class DProgressHUD extends Dialog {
     }
 
     public static Dialog show(Context context, Style style, CharSequence label) {
-        return show(context, style, label, false);
+        return show(context, style, label, true);
     }
 
     public static Dialog show(Context context, Style style, CharSequence label, boolean
@@ -78,12 +77,16 @@ public class DProgressHUD extends Dialog {
         mContainer = (FrameLayout) view.findViewById(R.id.container);
         mMessageView = (TextView) view.findViewById(R.id.tipTextView);
 
-
         setCustomView(mStyle);
 
-        setContentView(view, new LinearLayout.LayoutParams(
+
+        int wrapParam = ViewGroup.LayoutParams.WRAP_CONTENT;
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(wrapParam, wrapParam);
+        setContentView(view, params);
+        
+       /* setContentView(view, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局
+                LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局*/
 
         super.onCreate(savedInstanceState);
 
@@ -104,10 +107,31 @@ public class DProgressHUD extends Dialog {
     protected void setCustomView(Style style) {
         View view = null;
         switch (style) {
-            case PIE_DETERNIMATER:
+            case SPIN_INDETERMINATE:
                 view = new SpinView(getContext());
                 break;
-            case SPIN_INDETERMINATE:
+
+            case ALERT_ACTION_DONE:
+                view = new ImageView(getContext());
+                ((ImageView) view).setImageResource(R.drawable.ic_done_white_48dp);
+                break;
+
+            case ALERT_ACTION_ERROR:
+                view = new ImageView(getContext());
+                ((ImageView) view).setImageResource(R.drawable.ic_clear_white_48dp);
+                break;
+
+            case ALERT_ACTION_INFO:
+                view = new ImageView(getContext());
+                ((ImageView) view).setImageResource(R.drawable.ic_info_outline_white_48dp);
+                break;
+            case ALERT_ACTION_WARN:
+                view = new ImageView(getContext());
+                ((ImageView) view).setImageResource(R.drawable.ic_priority_high_white_48dp);
+                break;
+
+            //固定的有确定结束状态的
+            case PIE_DETERNIMATER:
             default:
                 view = new TextView(getContext());
                 ((TextView) view).setText("内容布局...");
@@ -126,7 +150,6 @@ public class DProgressHUD extends Dialog {
                 mContainer.removeAllViews();
             }
             addViewToFrame(view);
-
         }
 
     }
@@ -135,8 +158,8 @@ public class DProgressHUD extends Dialog {
         if (view == null) {
             throw new RuntimeException("view can not be null!");
         }
-        mContainer.addView(view);
-
-
+        int wrapParam = ViewGroup.LayoutParams.WRAP_CONTENT;
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(wrapParam, wrapParam);
+        mContainer.addView(view, params);
     }
 }

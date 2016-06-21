@@ -19,31 +19,37 @@
         android:text="SPIN_INDETERMINATE"
     />
     <Button
+        android:id="@+id/id_btn2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SPIN_INDETERMINATE_with_label"
     />
     <Button
+        android:id="@+id/id_btn3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="label"
+        android:text="info"
     />
     <Button
+        android:id="@+id/id_btn4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="PIN_DETERMINATE"
     />
     <Button
+        android:id="@+id/id_btn5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SUCCESS"
     />
     <Button
+        android:id="@+id/id_btn6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="WARN"
     />
     <Button
+        android:id="@+id/id_btn7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ERROR"

@@ -10,11 +10,11 @@
     android:elevation="2dp"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    android:paddingTop="14dp"
-    android:paddingBottom="14dp"
-    >
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+>
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="wrap_content"
@@ -25,10 +25,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="6dp"
-        tools:text="loading..."
-        android:textSize="12sp"
         android:textColor="#efe7e5"
+        android:textSize="12sp"
         android:visibility="gone"
+        tools:text="loading..."
         tools:visibility="visible"
 
 
