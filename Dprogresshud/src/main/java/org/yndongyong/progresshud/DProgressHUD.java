@@ -27,7 +27,7 @@ public class DProgressHUD extends Dialog {
 
     public enum Style {
         SPIN_INDETERMINATE, PIE_DETERNIMATER, ALERT_ACTION_DONE,
-        ALERT_ACTION_ERROR, ALERT_ACTION_INFO,ALERT_ACTION_WARN
+        ALERT_ACTION_ERROR, ALERT_ACTION_INFO, ALERT_ACTION_WARN
     }
 
     private View rootView;
@@ -89,21 +89,15 @@ public class DProgressHUD extends Dialog {
                 LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局*/
 
         super.onCreate(savedInstanceState);
-
-
     }
-
     protected void setLabel(CharSequence message) {
         if (mMessageView != null) {
             if (!TextUtils.isEmpty(message)) {
                 mMessageView.setVisibility(View.VISIBLE);
                 mMessageView.setText(message);
             }
-
         }
-
     }
-
     protected void setCustomView(Style style) {
         View view = null;
         switch (style) {
