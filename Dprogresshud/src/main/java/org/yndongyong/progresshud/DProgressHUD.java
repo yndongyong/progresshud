@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,13 +64,11 @@ public class DProgressHUD extends Dialog {
 
     @Override
     public void show() {
-        Log.d("TAG", "show() ");
         super.show();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("TAG", "onCreate() Bundle");
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View view = inflater.inflate(R.layout.dyprogresshud_layout, null);
 
@@ -109,20 +106,24 @@ public class DProgressHUD extends Dialog {
             case ALERT_ACTION_DONE:
                 view = new ImageView(getContext());
                 ((ImageView) view).setImageResource(R.drawable.ic_done_white_48dp);
+                scheduleDissmiss();
                 break;
 
             case ALERT_ACTION_ERROR:
                 view = new ImageView(getContext());
                 ((ImageView) view).setImageResource(R.drawable.ic_clear_white_48dp);
+                scheduleDissmiss();
                 break;
 
             case ALERT_ACTION_INFO:
                 view = new ImageView(getContext());
                 ((ImageView) view).setImageResource(R.drawable.ic_info_outline_white_48dp);
+                scheduleDissmiss();
                 break;
             case ALERT_ACTION_WARN:
                 view = new ImageView(getContext());
                 ((ImageView) view).setImageResource(R.drawable.ic_priority_high_white_48dp);
+                scheduleDissmiss();
                 break;
 
             //固定的有确定结束状态的
@@ -151,15 +152,27 @@ public class DProgressHUD extends Dialog {
 
     }
 
+    private void scheduleDissmiss() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                DProgressHUD.this.dismiss2();
+            }
+        }, 2000);
+    }
+    public void dismiss2() {
+        if (isShowing()) {
+            this.dismiss();
+        }
+    }
+
     /**
      * 设置 determinateview  的经度
-     *
      * @param progress
      */
     public void setProgress(int progress) {
         if (mDeterminateView != null) {
             mDeterminateView.setProgress(progress);
-            
             if (progress >=100) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -168,7 +181,7 @@ public class DProgressHUD extends Dialog {
                             DProgressHUD.this.dismiss();
                         }
                     }
-                }, 500);
+                }, 300);
             }
         }
     }

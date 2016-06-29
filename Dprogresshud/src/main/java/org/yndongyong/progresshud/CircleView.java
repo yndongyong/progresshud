@@ -23,8 +23,8 @@ public class CircleView extends View implements Determinate {
     private float width = 48.0f;//
     private float raduisF;
 
-    private int indicatorOutColor = 0x84eeeeee;
-    private int indicatorInnerColor = 0x84ffffff;
+    private int indicatorOutColor = 0xddeeeeee;
+    private int indicatorInnerColor = 0xddffffff;
 
     private int startAngle = -90;//开始的角度
     private int endAngle;//结束的角度

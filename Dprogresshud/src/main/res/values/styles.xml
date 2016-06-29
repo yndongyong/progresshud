@@ -13,7 +13,7 @@
         <!-- 无标题 -->
         
         <!--背景是不是半黑色-->
-        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>

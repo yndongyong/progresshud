@@ -57,54 +57,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.id_btn1:
                 progressDialog = DProgressHUD.show(this, DProgressHUD.Style.SPIN_INDETERMINATE);
-                scheduleDissmiss();
                 break;
             case R.id.id_btn2:
                 progressDialog = DProgressHUD.show(this, DProgressHUD.Style.SPIN_INDETERMINATE,
-                        "正在加载中请稍后...");
-                scheduleDissmiss();
+                        "正在加载中...");
                 break;
 
             case R.id.id_btn3:
                 progressDialog = DProgressHUD.show(this, DProgressHUD.Style.ALERT_ACTION_INFO,
                         "这是一条提示信息");
-                scheduleDissmiss();
                 break;
             case R.id.id_btn5:
                 progressDialog = DProgressHUD.show(this, DProgressHUD.Style.ALERT_ACTION_DONE,
                         "操作成功！");
-                scheduleDissmiss();
                 break;
 
             case R.id.id_btn6:
                 progressDialog = DProgressHUD.show(this, DProgressHUD.Style.ALERT_ACTION_WARN,
                         "警告信息！");
-                scheduleDissmiss();
                 break;
 
             case R.id.id_btn7:
                 progressDialog = DProgressHUD.show(this, DProgressHUD.Style.ALERT_ACTION_ERROR,
                         "操作失败！");
-                scheduleDissmiss();
                 break;
 
             case R.id.id_btn4:
-                pieDialog = DProgressHUD.show(this, DProgressHUD.Style.PIE_DETERNIMATER,"0%",true);
-//                pieDialog = DProgressHUD.show(this, DProgressHUD.Style.PIE_DETERNIMATER, null, true);
+//                pieDialog = DProgressHUD.show(this, DProgressHUD.Style.PIE_DETERNIMATER,"0%",true);
+                pieDialog = DProgressHUD.show(this, DProgressHUD.Style.PIE_DETERNIMATER, null, true);
                 scheduleProgress();
                 break;
         }
-    }
-
-    private void scheduleDissmiss() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (progressDialog != null && progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                }
-            }
-        }, 4000);
     }
 
     private void scheduleProgress() {
@@ -118,10 +101,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     progress += random;
                     if (progress <= 100 && pieDialog != null && pieDialog.isShowing()) {
                         pieDialog.setProgress(progress);
-                        pieDialog.setLabel(progress+"%");
+//                        pieDialog.setLabel(progress+"%");
                         new Handler(getMainLooper()).postDelayed(this, 500);
                     } else {
-                        pieDialog.setLabel("100%");
+//                        pieDialog.setLabel("100%");
                         pieDialog.setProgress(100);
                     }
                 }
