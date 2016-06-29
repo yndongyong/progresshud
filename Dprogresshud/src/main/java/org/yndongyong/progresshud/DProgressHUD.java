@@ -3,6 +3,7 @@ package org.yndongyong.progresshud;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,21 +36,22 @@ public class DProgressHUD extends Dialog {
     private FrameLayout mContainer;
     static Style mStyle = Style.SPIN_INDETERMINATE;
 
+    private Determinate mDeterminateView;//进度固定的动画的view
 
-    public static Dialog show(Context context, Style style) {
+    public static DProgressHUD show(Context context, Style style) {
         return show(context, style, null);
     }
 
-    public static Dialog show(Context context, Style style, CharSequence label) {
+    public static DProgressHUD show(Context context, Style style, CharSequence label) {
         return show(context, style, label, true);
     }
 
-    public static Dialog show(Context context, Style style, CharSequence label, boolean
+    public static DProgressHUD show(Context context, Style style, CharSequence label, boolean
             cancelable) {
         return show(context, style, label, cancelable, null);
     }
 
-    public static Dialog show(Context context, Style style, CharSequence label, boolean
+    public static DProgressHUD show(Context context, Style style, CharSequence label, boolean
             cancelable, OnCancelListener cancelListener) {
         DProgressHUD dialog = new DProgressHUD(context, R.style.loading_dialog);
         dialog.show();
@@ -87,17 +89,16 @@ public class DProgressHUD extends Dialog {
        /* setContentView(view, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局*/
-
         super.onCreate(savedInstanceState);
     }
-    protected void setLabel(CharSequence message) {
-        if (mMessageView != null) {
-            if (!TextUtils.isEmpty(message)) {
+
+    public void setLabel(CharSequence message) {
+        if (mMessageView != null && !TextUtils.isEmpty(message)) {
                 mMessageView.setVisibility(View.VISIBLE);
                 mMessageView.setText(message);
-            }
         }
     }
+
     protected void setCustomView(Style style) {
         View view = null;
         switch (style) {
@@ -126,6 +127,8 @@ public class DProgressHUD extends Dialog {
 
             //固定的有确定结束状态的
             case PIE_DETERNIMATER:
+                view = new CircleView(getContext());
+                break;
             default:
                 view = new TextView(getContext());
                 ((TextView) view).setText("内容布局...");
@@ -134,11 +137,11 @@ public class DProgressHUD extends Dialog {
         }
         if (view != null) {
             // TODO: 2016/6/20  
-           /* if (view instanceof Determinate) {
+            if (view instanceof Determinate) {
                 mDeterminateView = (Determinate) view;
             }
-            if (view instanceof Indeterminate) {
-                 = (Indeterminate) view;
+          /*  if (view instanceof Indeterminate) {
+                mDeterminateView = (Indeterminate) view;
             }*/
             if (isShowing()) {
                 mContainer.removeAllViews();
@@ -146,6 +149,28 @@ public class DProgressHUD extends Dialog {
             addViewToFrame(view);
         }
 
+    }
+
+    /**
+     * 设置 determinateview  的经度
+     *
+     * @param progress
+     */
+    public void setProgress(int progress) {
+        if (mDeterminateView != null) {
+            mDeterminateView.setProgress(progress);
+            
+            if (progress >=100) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (DProgressHUD.this.isShowing()) {
+                            DProgressHUD.this.dismiss();
+                        }
+                    }
+                }, 500);
+            }
+        }
     }
 
     protected void addViewToFrame(View view) {
