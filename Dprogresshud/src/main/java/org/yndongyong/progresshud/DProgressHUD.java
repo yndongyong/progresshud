@@ -2,200 +2,196 @@ package org.yndongyong.progresshud;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.yndongyong.progresshud.layout.ProgressLinearLayout;
-
 /**
- * Created by Dong on 2016/6/12.
+ * Created by Dong on 2016/6/20.
  */
-public class DProgressHUD {
-    
-    public enum Style{
-        SPIN_INDETERMINATE,NORMAL
+public class DProgressHUD extends Dialog {
+
+    public DProgressHUD(Context context) {
+        super(context);
     }
 
-    private DProgressDialog dialog;
-    private Builder mBuilder;
-
-    private boolean mIsAutoDismiss;
-
-    public DProgressHUD(Builder builder) {
-        mBuilder = builder;
-        dialog = new DProgressDialog(builder._context);
-        
-
-        setStyle(mBuilder._style);        
-        
+    public DProgressHUD(Context context, int themeResId) {
+        super(context, themeResId);
     }
 
-    private void setStyle(Style style) {
+    public enum Style {
+        SPIN_INDETERMINATE, PIE_DETERNIMATER, ALERT_ACTION_DONE,
+        ALERT_ACTION_ERROR, ALERT_ACTION_INFO, ALERT_ACTION_WARN
+    }
+
+    private View rootView;
+    private TextView mMessageView; //提示文本
+    private FrameLayout mContainer;
+    static Style mStyle = Style.SPIN_INDETERMINATE;
+
+    private Determinate mDeterminateView;//进度固定的动画的view
+
+    public static DProgressHUD show(Context context, Style style) {
+        return show(context, style, null);
+    }
+
+    public static DProgressHUD show(Context context, Style style, CharSequence label) {
+        return show(context, style, label, true);
+    }
+
+    public static DProgressHUD show(Context context, Style style, CharSequence label, boolean
+            cancelable) {
+        return show(context, style, label, cancelable, null);
+    }
+
+    public static DProgressHUD show(Context context, Style style, CharSequence label, boolean
+            cancelable, OnCancelListener cancelListener) {
+        DProgressHUD dialog = new DProgressHUD(context, R.style.loading_dialog);
+        dialog.show();
+        dialog.setLabel(label);
+        mStyle = style;
+        dialog.setCustomView(style);
+        dialog.setCancelable(cancelable);
+        dialog.setOnCancelListener(cancelListener);
+        return dialog;
+    }
+
+    @Override
+    public void show() {
+        super.show();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View view = inflater.inflate(R.layout.dyprogresshud_layout, null);
+
+        rootView = view.findViewById(R.id.dy_progresshud_view);
+        mContainer = (FrameLayout) view.findViewById(R.id.container);
+        mMessageView = (TextView) view.findViewById(R.id.tipTextView);
+
+        setCustomView(mStyle);
+
+
+        int wrapParam = ViewGroup.LayoutParams.WRAP_CONTENT;
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(wrapParam, wrapParam);
+        setContentView(view, params);
+        
+       /* setContentView(view, new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局*/
+        super.onCreate(savedInstanceState);
+    }
+
+    public void setLabel(CharSequence message) {
+        if (mMessageView != null && !TextUtils.isEmpty(message)) {
+                mMessageView.setVisibility(View.VISIBLE);
+                mMessageView.setText(message);
+        }
+    }
+
+    protected void setCustomView(Style style) {
         View view = null;
         switch (style) {
             case SPIN_INDETERMINATE:
-//                view = new Dialog(mBuilder._context);
-                view = new TextView(mBuilder._context);
-                ((TextView)view).setText("loading...");
+                view = new SpinView(getContext());
                 break;
+
+            case ALERT_ACTION_DONE:
+                view = new ImageView(getContext());
+                ((ImageView) view).setImageResource(R.drawable.ic_done_white_48dp);
+                scheduleDissmiss();
+                break;
+
+            case ALERT_ACTION_ERROR:
+                view = new ImageView(getContext());
+                ((ImageView) view).setImageResource(R.drawable.ic_clear_white_48dp);
+                scheduleDissmiss();
+                break;
+
+            case ALERT_ACTION_INFO:
+                view = new ImageView(getContext());
+                ((ImageView) view).setImageResource(R.drawable.ic_info_outline_white_48dp);
+                scheduleDissmiss();
+                break;
+            case ALERT_ACTION_WARN:
+                view = new ImageView(getContext());
+                ((ImageView) view).setImageResource(R.drawable.ic_priority_high_white_48dp);
+                scheduleDissmiss();
+                break;
+
+            //固定的有确定结束状态的
+            case PIE_DETERNIMATER:
+                view = new CircleView(getContext());
+                break;
+            default:
+                view = new TextView(getContext());
+                ((TextView) view).setText("内容布局...");
+                break;
+
         }
-        
-        dialog.setView(view);
-                
-    }
-
-    public void show() {
-        if (dialog != null && !dialog.isShowing()) {
-            dialog.show();
-        }
-    }
-
-    public static class Builder {
-        int _bgColor;
-        int _cornerRadius;//圆角大小
-        CharSequence _label;
-
-        Style _style;
-
-
-        Context _context;
-
-        public Builder(Context context) {
-            this._context = context;
-            _bgColor = context.getResources().getColor(R.color.dyprogresshud_default_color);
-            _cornerRadius = context.getResources().getDimensionPixelOffset(R.dimen.dyprogresshud_default_radius);
-        }
-
-        public Builder setBackgroundColor(int color) {
-            _bgColor = color;
-            return this;
-        }
-
-        public Builder setCornerRadius(int radius) {
-            _cornerRadius = radius;
-            return this;
-        }
-
-        public Builder setLabel(CharSequence sequence) {
-            _label = sequence;
-            return this;
-        }
-
-        public Builder setStyle(Style style) {
-            _style = style;
-            return this;
-        }
-
-        public DProgressHUD build() {
-            return new DProgressHUD(this);
-        }
-
-    }
-
-    private class DProgressDialog extends Dialog {
-        
-        private ProgressLinearLayout mBackground;
-        private FrameLayout mContainer;
-        private TextView mLabel;
-
-        private View mView;
-        
-        public DProgressDialog(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-            setContentView(R.layout.dyprogresshud_layout);
-
-            Window window = getWindow();
-            window.setBackgroundDrawable(new ColorDrawable(0));
-            
-            WindowManager.LayoutParams LayoutParams = getWindow().getAttributes();
-            LayoutParams.gravity = Gravity.CENTER;
-            window.setAttributes(LayoutParams);
-
-            intiViewAndEvent();
-        }
-
-        private void intiViewAndEvent() {
-            mBackground= (ProgressLinearLayout) findViewById(R.id.background);
-            mContainer = (FrameLayout) findViewById(R.id.container);
-            mLabel = (TextView) findViewById(R.id.label);
-
-            mBackground.setBackgroundColor(mBuilder._bgColor);
-            mBackground.setCornerRadius(mBuilder._cornerRadius);
-
-            updateBackgroundSize();
-
-            if (!TextUtils.isEmpty(mBuilder._label)) {
-                mLabel.setText(mBuilder._label);
-                mLabel.setVisibility(View.VISIBLE);
+        if (view != null) {
+            // TODO: 2016/6/20  
+            if (view instanceof Determinate) {
+                mDeterminateView = (Determinate) view;
             }
-
-        }
-
-        private void addView2Frame(View view) {
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams
-                    .WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+          /*  if (view instanceof Indeterminate) {
+                mDeterminateView = (Indeterminate) view;
+            }*/
             if (isShowing()) {
                 mContainer.removeAllViews();
             }
-            mContainer.addView(view,params);
+            addViewToFrame(view);
         }
 
-        private void setView(View view) {
-            // TODO: 2016/6/12 判断view的类型 
-            addView2Frame(view);
-        }
+    }
 
-        private void updateBackgroundSize() {
-            int width;
-            int height;
-
-            int Cwidth = 0;
-            int Cheight = 0;
-            
-            int Twidth = 0;
-            int Theight =0;
-            
-            if (mContainer != null) {
-                ViewGroup.LayoutParams layoutParams = mContainer.getLayoutParams();
-                Cwidth = layoutParams.width;
-                Cheight = layoutParams.height;
+    private void scheduleDissmiss() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                DProgressHUD.this.dismiss2();
             }
-
-            if (mLabel != null) {
-                ViewGroup.LayoutParams layoutParams = mLabel.getLayoutParams();
-                Twidth = layoutParams.width;
-                Cheight = layoutParams.height;
-            }
-            
-            //deal width;
-
-            width = Math.max(Cwidth, Twidth);
-
-            if (mContainer != null) {
-                ViewGroup.LayoutParams layoutParams = mContainer.getLayoutParams();
-                layoutParams.width = width;
-                mContainer.setLayoutParams(layoutParams);
-            }
-                
-                
+        }, 2000);
+    }
+    public void dismiss2() {
+        if (isShowing()) {
+            this.dismiss();
         }
     }
-    
-    
-    
+
+    /**
+     * 设置 determinateview  的经度
+     * @param progress
+     */
+    public void setProgress(int progress) {
+        if (mDeterminateView != null) {
+            mDeterminateView.setProgress(progress);
+            if (progress >=100) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (DProgressHUD.this.isShowing()) {
+                            DProgressHUD.this.dismiss();
+                        }
+                    }
+                }, 300);
+            }
+        }
+    }
+
+    protected void addViewToFrame(View view) {
+        if (view == null) {
+            throw new RuntimeException("view can not be null!");
+        }
+        int wrapParam = ViewGroup.LayoutParams.WRAP_CONTENT;
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(wrapParam, wrapParam);
+        mContainer.addView(view, params);
+    }
 }

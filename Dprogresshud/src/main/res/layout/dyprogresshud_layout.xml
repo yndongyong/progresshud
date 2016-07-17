@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.yndongyong.progresshud.layout.ProgressLinearLayout
-    android:id="@+id/background"
+<LinearLayout
+    android:id="@+id/dy_progresshud_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
+    android:layout_gravity="center"
+    android:background="@drawable/dy_dialog_background"
+    android:elevation="2dp"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
 >
-
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    </FrameLayout>
+        android:layout_height="wrap_content"
+    />
+    <TextView
+        android:id="@+id/tipTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="6dp"
+        android:paddingLeft="6dp"
+        android:textColor="#efe7e5"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:maxLines="1"
+        tools:text="loading..."
+        tools:visibility="visible"
 
-    <TextView 
-        android:id="@+id/label"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:layout_marginBottom="4dp"
-              android:layout_marginLeft="16dp"
-              android:layout_marginRight="16dp"
-              android:layout_marginTop="8dp"
-              android:textColor="@android:color/white"
-              android:textSize="16sp"
-              android:visibility="gone"
-              tools:text="label"
-              tools:visibility="visible"/>
 
-</org.yndongyong.progresshud.layout.ProgressLinearLayout>
+    />
+</LinearLayout>
