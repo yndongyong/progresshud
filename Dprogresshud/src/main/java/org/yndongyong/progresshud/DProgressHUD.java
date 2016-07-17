@@ -32,6 +32,7 @@ public class DProgressHUD {
     public DProgressHUD(Builder builder) {
         mBuilder = builder;
         dialog = new DProgressDialog(builder._context);
+        
 
         setStyle(mBuilder._style);        
         
