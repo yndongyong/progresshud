@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import static org.yndongyong.progresshud.DProgressHUD.Style.ALERT_ACTION_DONE;
 
 /**
  * Created by Dong on 2016/6/20.
@@ -79,13 +82,13 @@ public class DProgressHUD extends Dialog {
         setCustomView(mStyle);
 
 
-        int wrapParam = ViewGroup.LayoutParams.WRAP_CONTENT;
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(wrapParam, wrapParam);
-        setContentView(view, params);
-        
-       /* setContentView(view, new LinearLayout.LayoutParams(
+//        int wrapParam = ViewGroup.LayoutParams.WRAP_CONTENT;
+//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(wrapParam, wrapParam);
+//        setContentView(view, params);
+//        setContentView(view);
+        setContentView(view, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局*/
+                LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局
         super.onCreate(savedInstanceState);
     }
 
@@ -152,6 +155,15 @@ public class DProgressHUD extends Dialog {
 
     }
 
+    private void schedulechange() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                DProgressHUD.this.setLabel("操作完成");
+                DProgressHUD.this.setCustomView(ALERT_ACTION_DONE);
+            }
+        }, 3000);
+    }
     private void scheduleDissmiss() {
         new Handler().postDelayed(new Runnable() {
             @Override
