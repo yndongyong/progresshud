@@ -99,7 +99,11 @@ public class DProgressHUD extends Dialog {
         }
     }
 
-    protected void setCustomView(Style style) {
+    public void setStyle(Style style) {
+        setCustomView(style);
+    }
+
+    private void setCustomView(Style style) {
         View view = null;
         switch (style) {
             case SPIN_INDETERMINATE:
@@ -108,25 +112,26 @@ public class DProgressHUD extends Dialog {
 
             case ALERT_ACTION_DONE:
                 view = new ImageView(getContext());
-                ((ImageView) view).setImageResource(R.drawable.ic_done_white_48dp);
-                scheduleDissmiss();
+//                ((ImageView) view).setImageResource(R.drawable.ic_done_white_48dp);
+                ((ImageView) view).setImageResource(R.drawable.clean_success);
+//                scheduleDissmiss();
                 break;
 
             case ALERT_ACTION_ERROR:
                 view = new ImageView(getContext());
                 ((ImageView) view).setImageResource(R.drawable.ic_clear_white_48dp);
-                scheduleDissmiss();
+//                scheduleDissmiss();
                 break;
 
             case ALERT_ACTION_INFO:
                 view = new ImageView(getContext());
                 ((ImageView) view).setImageResource(R.drawable.ic_info_outline_white_48dp);
-                scheduleDissmiss();
+//                scheduleDissmiss();
                 break;
             case ALERT_ACTION_WARN:
                 view = new ImageView(getContext());
                 ((ImageView) view).setImageResource(R.drawable.ic_priority_high_white_48dp);
-                scheduleDissmiss();
+//                scheduleDissmiss();
                 break;
 
             //固定的有确定结束状态的
