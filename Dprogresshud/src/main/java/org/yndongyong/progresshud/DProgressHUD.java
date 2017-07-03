@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,12 +52,36 @@ public class DProgressHUD extends Dialog {
 
     public static DProgressHUD show(Context context, Style style, CharSequence label, boolean
             cancelable) {
-        return show(context, style, label, cancelable, null);
+        return show(context, style, label, cancelable, false);
+    }
+
+    /**
+     *
+     * @param context
+     * @param style
+     * @param label
+     * @param cancelable
+     * @param backgroundDimEnabled true背景变暗，false：背景不变暗
+     * @return
+     */
+    public static DProgressHUD show(Context context, Style style, CharSequence label, boolean
+            cancelable, boolean backgroundDimEnabled) {
+        return show(context, style, label, cancelable, backgroundDimEnabled, null);
     }
 
     public static DProgressHUD show(Context context, Style style, CharSequence label, boolean
-            cancelable, OnCancelListener cancelListener) {
+            cancelable, boolean backgroundDimEnabled, OnCancelListener cancelListener) {
         DProgressHUD dialog = new DProgressHUD(context, R.style.loading_dialog);
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams params = window.getAttributes();
+        if (backgroundDimEnabled) {
+            params.dimAmount = 0.5f;
+        } else {
+            params.dimAmount = 0.0f;
+        }
+        window.setAttributes(params);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         dialog.show();
         dialog.setLabel(label);
         mStyle = style;
@@ -94,8 +120,8 @@ public class DProgressHUD extends Dialog {
 
     public void setLabel(CharSequence message) {
         if (mMessageView != null && !TextUtils.isEmpty(message)) {
-                mMessageView.setVisibility(View.VISIBLE);
-                mMessageView.setText(message);
+            mMessageView.setVisibility(View.VISIBLE);
+            mMessageView.setText(message);
         }
     }
 
@@ -167,8 +193,9 @@ public class DProgressHUD extends Dialog {
                 DProgressHUD.this.setLabel("操作完成");
                 DProgressHUD.this.setCustomView(ALERT_ACTION_DONE);
             }
-        }, 3000);
+        }, 2000);
     }
+
     private void scheduleDissmiss() {
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -177,6 +204,7 @@ public class DProgressHUD extends Dialog {
             }
         }, 2000);
     }
+
     public void dismiss2() {
         if (isShowing()) {
             this.dismiss();
@@ -185,12 +213,13 @@ public class DProgressHUD extends Dialog {
 
     /**
      * 设置 determinateview  的经度
+     *
      * @param progress
      */
     public void setProgress(int progress) {
         if (mDeterminateView != null) {
             mDeterminateView.setProgress(progress);
-            if (progress >=100) {
+            if (progress >= 100) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

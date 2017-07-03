@@ -1,6 +1,7 @@
 package org.yndongyong.progresshud.demo;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btn5;
     private Button btn6;
     private Button btn7;
+    private Button btn8;
 
     private DProgressHUD progressDialog;
     private DProgressHUD pieDialog;
@@ -49,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btn7 = (Button) findViewById(R.id.id_btn7);
         btn7.setOnClickListener(this);
+
+        btn8 = (Button) findViewById(R.id.id_btn8);
+        btn8.setOnClickListener(this);
 
     }
 
@@ -86,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                pieDialog = DProgressHUD.show(this, DProgressHUD.Style.PIE_DETERNIMATER,"0%",true);
                 pieDialog = DProgressHUD.show(this, DProgressHUD.Style.PIE_DETERNIMATER, null, true);
                 scheduleProgress();
+                break;
+
+            case R.id.id_btn8:
+                startActivity(new Intent(this,NestFragmentActivity.class));
                 break;
         }
     }
