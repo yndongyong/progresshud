@@ -145,7 +145,8 @@ public class DProgressHUD extends Dialog {
 
             case ALERT_ACTION_ERROR:
                 view = new ImageView(getContext());
-                ((ImageView) view).setImageResource(R.drawable.ic_clear_white_48dp);
+//                ((ImageView) view).setImageResource(R.drawable.ic_clear_white_48dp);
+                ((ImageView) view).setImageResource(R.drawable.ic_failed);
 //                scheduleDissmiss();
                 break;
 

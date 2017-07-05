@@ -75,7 +75,7 @@ public class BlankFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DProgressHUD progressDialog = DProgressHUD.show(getActivity(), DProgressHUD.Style.SPIN_INDETERMINATE,
-                        "正在加载中...", true,true);
+                        "正在加载中...", true,false);
 
             }
         });
